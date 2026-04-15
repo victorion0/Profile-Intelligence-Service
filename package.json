@@ -1,0 +1,33 @@
+{
+  "name": "profile-intelligence-service",
+  "version": "1.0.0",
+  "description": "Profile Intelligence Service - Enriches names with gender, age, and nationality data",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "build": "prisma generate",
+    "test": "node test.js"
+  },
+  "keywords": ["profile", "api", "enrichment", "genderize", "agify", "nationalize"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@prisma/client": "^7.7.0",
+    "axios": "^1.15.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "uuidv7": "^1.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14",
+    "prisma": "^7.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

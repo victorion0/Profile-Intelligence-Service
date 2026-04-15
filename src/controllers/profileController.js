@@ -159,17 +159,20 @@ class ProfileController {
   }
 
   formatProfileResponse(profile) {
+    const createdAt = profile.created_at || profile.createdAt;
+    const createdAtISO = createdAt instanceof Date ? createdAt.toISOString() : createdAt;
+
     return {
       id: profile.id,
       name: profile.name,
       gender: profile.gender,
-      gender_probability: profile.genderProbability,
-      sample_size: profile.sampleSize,
+      gender_probability: profile.gender_probability ?? profile.genderProbability,
+      sample_size: profile.sample_size ?? profile.sampleSize,
       age: profile.age,
-      age_group: profile.ageGroup,
-      country_id: profile.countryId,
-      country_probability: profile.countryProbability,
-      created_at: profile.createdAt.toISOString()
+      age_group: profile.age_group ?? profile.ageGroup,
+      country_id: profile.country_id ?? profile.countryId,
+      country_probability: profile.country_probability ?? profile.countryProbability,
+      created_at: createdAtISO
     };
   }
 }

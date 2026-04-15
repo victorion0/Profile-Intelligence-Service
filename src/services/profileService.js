@@ -1,55 +1,75 @@
-const { PrismaClient } = require('@prisma/client');
+const { neon } = require('@neondatabase/serverless');
 
-const prisma = new PrismaClient();
+const sql = neon(process.env.DATABASE_URL);
+
+// Create the table if it doesn't exist (idempotent startup)
+async function ensureSchema() {
+  await sql`
+    CREATE TABLE IF NOT EXISTS profiles (
+      id TEXT PRIMARY KEY,
+      name TEXT UNIQUE NOT NULL,
+      gender VARCHAR(50),
+      gender_probability FLOAT,
+      sample_size INT,
+      age INT,
+      age_group VARCHAR(50),
+      country_id VARCHAR(10),
+      country_probability FLOAT,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+}
 
 class ProfileService {
+  async init() {
+    await ensureSchema();
+  }
+
   async create(profileData) {
-    return prisma.profile.create({
-      data: profileData
-    });
+    const rows = await sql`
+      INSERT INTO profiles (id, name, gender, gender_probability, sample_size, age, age_group, country_id, country_probability, created_at)
+      VALUES (
+        ${profileData.id},
+        ${profileData.name},
+        ${profileData.gender},
+        ${profileData.genderProbability},
+        ${profileData.sampleSize},
+        ${profileData.age},
+        ${profileData.ageGroup},
+        ${profileData.countryId},
+        ${profileData.countryProbability},
+        NOW()
+      )
+      RETURNING *
+    `;
+    return rows[0];
   }
 
   async findById(id) {
-    return prisma.profile.findUnique({
-      where: { id }
-    });
+    const rows = await sql`SELECT * FROM profiles WHERE id = ${id}`;
+    return rows[0] || null;
   }
 
   async findByName(name) {
-    return prisma.profile.findUnique({
-      where: { name: name.toLowerCase() }
-    });
+    const rows = await sql`SELECT * FROM profiles WHERE name = ${name.toLowerCase()}`;
+    return rows[0] || null;
   }
 
   async findAll(filters = {}) {
-    const where = {};
+    const rows = await sql`
+      SELECT * FROM profiles 
+      WHERE 1=1
+      ${filters.gender ? sql` AND gender = ${filters.gender.toLowerCase()}` : sql``}
+      ${filters.country_id ? sql` AND country_id = ${filters.country_id.toUpperCase()}` : sql``}
+      ${filters.age_group ? sql` AND age_group = ${filters.age_group.toLowerCase()}` : sql``}
+      ORDER BY created_at DESC
+    `;
 
-    if (filters.gender) {
-      where.gender = filters.gender.toLowerCase();
-    }
-
-    if (filters.country_id) {
-      where.countryId = filters.country_id.toUpperCase();
-    }
-
-    if (filters.age_group) {
-      where.ageGroup = filters.age_group.toLowerCase();
-    }
-
-    const profiles = await prisma.profile.findMany({
-      where,
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
-
-    return profiles;
+    return rows;
   }
 
   async deleteById(id) {
-    return prisma.profile.delete({
-      where: { id }
-    });
+    await sql`DELETE FROM profiles WHERE id = ${id}`;
   }
 }
 

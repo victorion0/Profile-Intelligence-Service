@@ -1,7 +1,15 @@
 const app = require('../src/index');
+const profileService = require('../src/services/profileService');
 
-// For Vercel serverless deployment
+// Initialize schema on first load
+let initialized = false;
+
 module.exports = async (req, res) => {
+  if (!initialized) {
+    await profileService.init();
+    initialized = true;
+  }
+
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -10,6 +18,5 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
-  // Let Express handle the rest
   return app(req, res);
 };

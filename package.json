@@ -12,20 +12,27 @@
     "build": "prisma generate",
     "test": "node test.js"
   },
-  "keywords": ["profile", "api", "enrichment", "genderize", "agify", "nationalize"],
+  "keywords": [
+    "profile",
+    "api",
+    "enrichment",
+    "genderize",
+    "agify",
+    "nationalize"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@prisma/client": "^7.7.0",
+    "@neondatabase/serverless": "^1.0.2",
     "axios": "^1.15.0",
     "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "uuidv7": "^1.2.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14",
-    "prisma": "^7.7.0"
+    "nodemon": "^3.1.14"
   },
   "engines": {
     "node": ">=18.0.0"

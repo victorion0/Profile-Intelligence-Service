@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 // Initialize database schema, then start server
 profileService.init().then(() => {
   console.log('✅ Database schema ready');
-  
+
   const server = app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
   });

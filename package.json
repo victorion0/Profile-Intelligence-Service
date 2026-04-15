@@ -24,11 +24,12 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@neondatabase/serverless": "^1.0.2",
+    "@prisma/adapter-pg": "^7.7.0",
     "axios": "^1.15.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "pg": "^8.20.0",
     "uuidv7": "^1.2.1"
   },
   "devDependencies": {

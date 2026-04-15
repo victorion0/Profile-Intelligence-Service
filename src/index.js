@@ -1,4 +1,6 @@
-require('dotenv').config();
+// Load dotenv only if .env file exists (not needed on Vercel)
+try { require('dotenv').config(); } catch(e) {}
+
 const express = require('express');
 const cors = require('cors');
 const profileRoutes = require('./routes/profileRoutes');

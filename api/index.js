@@ -1,7 +1,6 @@
 const app = require('../src/index');
 const profileService = require('../src/services/profileService');
 
-// Initialize database schema on first cold start
 let initialized = false;
 
 module.exports = async (req, res) => {
@@ -17,15 +16,20 @@ module.exports = async (req, res) => {
   if (!initialized) {
     try {
       console.log('Initializing database schema...');
+      console.log('DATABASE_URL set:', !!process.env.DATABASE_URL);
       await profileService.init();
       initialized = true;
       console.log('Database initialized successfully');
     } catch (err) {
-      console.error('Database init failed:', err.message);
+      console.error('Database init failed:', err);
       return res.status(500).json({ status: 'error', message: 'Database initialization failed: ' + err.message });
     }
   }
 
-  // Handle the request with Express
-  return app(req, res);
+  try {
+    return app(req, res);
+  } catch (err) {
+    console.error('Request failed:', err);
+    return res.status(500).json({ status: 'error', message: 'Server error: ' + err.message });
+  }
 };

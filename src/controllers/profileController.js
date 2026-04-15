@@ -1,6 +1,6 @@
 const externalApiService = require('../services/externalApiService');
 const profileService = require('../services/profileService');
-const { v7: uuidv7 } = require('uuid');
+const { uuidv7 } = require('../utils/uuid');
 
 class ProfileController {
   async createProfile(req, res) {

@@ -19,7 +19,17 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// Root route - redirect to API docs
+app.get('/', (req, res) => {
+  res.json({
+    name: 'Profile Intelligence Service',
+    description: 'Enrich names with gender, age, and nationality data',
+    docs: '/api',
+    version: '1.0.0'
+  });
+});
+
+// API routes
 app.use('/api', profileRoutes);
 
 // Error handling
